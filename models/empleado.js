@@ -1,15 +1,24 @@
 'use strict'
-module.exports = (sequelize, type) => {
-    return sequelize.define('empleado', {
-        id: {
-          type: type.INTEGER,
-          primaryKey: true,
-          autoIncrement: true
+const db = require('../config/dbConfig');
+const sequelize = db.sequelize
+module.exports = (sequelize, Sequelize) => {
+    const Empleado = sequelize.define('empleado', {
+        nombre: {
+            type: Sequelize.STRING
         },
-        nombre: type.STRING,
-        apellido: type.STRING,
-        email:type.STRING,
-        dpi:type.STRING,
-        diasDisponibles:type.INTEGER,
-    },{ timestamps: false });
-}   
+        apellido: {
+            type: Sequelize.STRING
+        },
+        email: {
+            type: Sequelize.STRING
+        },
+        dpi: {
+            type: Sequelize.STRING
+        },
+        diasDisponibles: {
+            type: Sequelize.INTEGER
+        }
+    }, { timestamps: false });
+
+    return Empleado;
+}

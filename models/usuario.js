@@ -1,12 +1,15 @@
 'use strict'
-module.exports = (sequelize, type) => {
-    return sequelize.define('usuario', {
-        id: {
-          type: type.INTEGER,
-          primaryKey: true,
-          autoIncrement: true
-        },
-        usuario: type.STRING,
-        password: type.STRING,
-    },{ timestamps: false });
+const db = require('../config/dbConfig');
+const sequelize=db.sequelize
+module.exports = (sequelize, Sequelize) => {
+  const Usuario = sequelize.define('usuario', {
+    usuario: {
+    type: Sequelize.STRING
+    },
+    password: {
+    type: Sequelize.STRING
+    }
+  },{ timestamps: false });
+  
+  return Usuario;
 }

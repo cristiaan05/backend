@@ -1,19 +1,25 @@
-module.exports = (sequelize, type) => {
-    return sequelize.define('solicitude', {
-        id: {
-          type: type.INTEGER,
-          primaryKey: true,
-          autoIncrement: true
-        },
-       idEmpleado: {
-        type: type.INTEGER,
+'use strict'
+const db = require('../config/dbConfig');
+const sequelize = db.sequelize
+module.exports = (sequelize, Sequelize) => {
+    const Solicitud = sequelize.define('solicitude', {
+        idEmpleado: {
+            type: Sequelize.INTEGER,
             references: {
                 model: 'empleados',
                 key: 'id'
             }
         },
-        fecha: type.DATE,
-        diasSolicitados:type.INTEGER,
-        status:type.STRING,
-    },{ timestamps: false });
+        fecha: {
+            type: Sequelize.DATE
+        },
+        diasSolicitados: {
+            type: Sequelize.INTEGER
+        },
+        status: {
+            type: Sequelize.STRING
+        }
+    }, { timestamps: false });
+
+    return Solicitud;
 }
