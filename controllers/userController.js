@@ -123,6 +123,26 @@ function eliminarSolicitud(req, res) {
     })
 }
 
+function estado(req, res) {
+    var id = req.params.id;
+    var status = req.body.status;
+    if (status == "aceptado") {
+        Solicitud.update({ status: 'aceptada' },
+            { where: { id: id } }
+        ).then(solicitud => {
+            res.send(solicitud)
+            //res.status(200).send("updated successfully a customer with id = " + idEmpleado);
+        });
+    } else if (status == "rechazado") {
+        Solicitud.update({ status: 'rechazada' },
+            { where: { id: id } }
+        ).then(solicitud => {
+            res.send(solicitud)
+            //res.status(200).send("updated successfully a customer with id = " + idEmpleado);
+        });
+    }
+}
+
 module.exports = {
     addUser,
     login,
@@ -130,5 +150,6 @@ module.exports = {
     eliminarEmpleado,
     crearSolicitud,
     getSolicitudes,
-    eliminarSolicitud
+    eliminarSolicitud,
+    estado
 }
