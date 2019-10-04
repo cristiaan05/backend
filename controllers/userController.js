@@ -1,9 +1,8 @@
 'use strict'
 const Usuario=require('../index');
-const User=Usuario.Usuario
 
 function addUser(req, res) {
-    User.create({
+    Usuario.Usuario.create({
         usuario: req.params.usuario,
         password: req.params.password
     }).then(user => {
