@@ -10,7 +10,7 @@ function login(req, res) {
 
     Usuario.findOne({ where: { usuario: usuario, password: password } }).then(usuario => {
         if (usuario) {
-            res.send(usuario);
+            res.send('ok');
         } else {
             res.send('error')
         }
@@ -87,7 +87,7 @@ function crearSolicitud(req, res) {
                     res.status(200).send(solicitud);
                 });
             } else {
-                res.send('no cuenta con dias suficientes para realizar la solicitud')
+                res.send('error')
             }
         } else {
             res.send('el empleado no existe')
@@ -95,10 +95,17 @@ function crearSolicitud(req, res) {
     })
 }
 
-function getSolicitudes(req, res) {
-    Solicitud.findAll().then(solicitudes => {
+function getEmpleados(req, res) {
+    Empleado.findAll().then(empleado => {
         // Send all customers to Client
-        res.send(solicitudes);
+        res.send(empleado);
+    });
+}
+
+function getSolicitudes(req, res) {
+    Solicitud.findAll().then(empleado => {
+        // Send all customers to Client
+        res.send(empleado);
     });
 }
 
@@ -149,7 +156,8 @@ module.exports = {
     agregarEmpleado,
     eliminarEmpleado,
     crearSolicitud,
-    getSolicitudes,
+    getEmpleados,
     eliminarSolicitud,
-    estado
+    estado,
+    getSolicitudes
 }
