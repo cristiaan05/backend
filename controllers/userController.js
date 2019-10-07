@@ -33,7 +33,7 @@ function agregarEmpleado(req, res) {
     var dpi = req.body.dpi;
     var email = req.body.email;
     var diasDisponibles = req.body.dias;
-    if (nombre && apellido && dpi && email && diasDisponibles && diasDisponibles>0) {
+    if (nombre && apellido && dpi && email && diasDisponibles && diasDisponibles > 0) {
         Empleado.create({
             nombre: nombre,
             apellido: apellido,
@@ -71,7 +71,7 @@ function crearSolicitud(req, res) {
     var status = 'pendiente'
     Empleado.findOne({ where: { id: idEmpleado } }).then(customer => {
         if (customer) {
-            if (diasSolicitados <= customer.diasDisponibles && diasSolicitados>0) {
+            if (diasSolicitados <= customer.diasDisponibles && diasSolicitados > 0) {
                 Solicitud.create({
                     empleadoId: idEmpleado,
                     fecha: date,
@@ -98,7 +98,7 @@ function getEmpleados(req, res) {
 }
 
 function getSolicitudes(req, res) {
-    Solicitud.findAll({include: [Empleado] }).then(solicitud=>{
+    Solicitud.findAll({ include: [Empleado] }).then(solicitud => {
         res.send(solicitud)
     })
 }
@@ -131,12 +131,14 @@ function estado(req, res) {
         Solicitud.update({ status: 'aceptada' },
             { where: { id: id } }
         ).then(solicitud => {
-            Empleado.findOne({ where: { id: solicitud.empleadoId } }).then(empleado => {
-            Empleado.update({ diasDisponibles: empleado.diasDisponibles - solicitud.diasSolicitados },
-                { where: { id: empleado.id } }
-            ).then(() => {
-                //res.status(200).send("updated successfully a customer with id = " + idEmpleado);
-            });
+            Solicitud.findOne({ where: { id: id } }).then(solicitud => {
+                Empleado.findOne({ where: { id: solicitud.empleadoId } }).then(empleado => {
+                    Empleado.update({ diasDisponibles: empleado.diasDisponibles - solicitud.diasSolicitados },
+                        { where: { id: empleado.id } }
+                    ).then(() => {
+                        //res.status(200).send("updated successfully a customer with id = " + idEmpleado);
+                    });
+                });
             });
             res.send(solicitud);
             //res.status(200).send("updated successfully a customer with id = " + idEmpleado);

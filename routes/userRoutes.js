@@ -13,7 +13,7 @@ api.post('/crearSolicitud/:id',UserController.crearSolicitud);
 api.get('/empleados',UserController.getEmpleados);
 api.get('/solicitudes',UserController.getSolicitudes);
 api.delete('/eliminarSolicitud/:id',UserController.eliminarSolicitud);
-api.put('/estado/:id',UserController.estado);
+api.post('/estado/:id',UserController.estado);
 
 //Exportar ruta
 module.exports=api;
