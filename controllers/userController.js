@@ -33,7 +33,7 @@ function agregarEmpleado(req, res) {
     var dpi = req.body.dpi;
     var email = req.body.email;
     var diasDisponibles = req.body.dias;
-    if (nombre && apellido && dpi && email && diasDisponibles) {
+    if (nombre && apellido && dpi && email && diasDisponibles && diasDisponibles>0) {
         Empleado.create({
             nombre: nombre,
             apellido: apellido,
@@ -71,18 +71,13 @@ function crearSolicitud(req, res) {
     var status = 'pendiente'
     Empleado.findOne({ where: { id: idEmpleado } }).then(customer => {
         if (customer) {
-            if (diasSolicitados < customer.diasDisponibles) {
+            if (diasSolicitados <= customer.diasDisponibles && diasSolicitados>0) {
                 Solicitud.create({
                     empleadoId: idEmpleado,
                     fecha: date,
                     diasSolicitados: diasSolicitados,
                     status: status
                 }).then(solicitud => {
-                    Empleado.update({ diasDisponibles: customer.diasDisponibles - diasSolicitados },
-                        { where: { id: idEmpleado } }
-                    ).then(() => {
-                        //res.status(200).send("updated successfully a customer with id = " + idEmpleado);
-                    });
                     // Send created customer to client
                     res.status(200).send(solicitud);
                 });
@@ -136,7 +131,14 @@ function estado(req, res) {
         Solicitud.update({ status: 'aceptada' },
             { where: { id: id } }
         ).then(solicitud => {
-            res.send(solicitud)
+            Empleado.findOne({ where: { id: solicitud.empleadoId } }).then(empleado => {
+            Empleado.update({ diasDisponibles: empleado.diasDisponibles - solicitud.diasSolicitados },
+                { where: { id: empleado.id } }
+            ).then(() => {
+                //res.status(200).send("updated successfully a customer with id = " + idEmpleado);
+            });
+            });
+            res.send(solicitud);
             //res.status(200).send("updated successfully a customer with id = " + idEmpleado);
         });
     } else if (status == "rechazado") {
@@ -148,6 +150,7 @@ function estado(req, res) {
         });
     }
 }
+
 
 module.exports = {
     addUser,
