@@ -24,6 +24,9 @@ db.sequelize = sequelize;
 db.usuario = require('../models/usuario')(sequelize, Sequelize);
 db.empleado = require('../models/empleado')(sequelize, Sequelize);
 db.solicitud = require('../models/solicitud')(sequelize, Sequelize);
+
+db.empleado.hasMany(db.solicitud)
+db.solicitud.belongsTo(db.empleado)
  
  
 module.exports = db;

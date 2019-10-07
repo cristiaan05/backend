@@ -3,7 +3,7 @@ const db = require('../config/dbConfig');
 const sequelize = db.sequelize
 module.exports = (sequelize, Sequelize) => {
     const Solicitud = sequelize.define('solicitude', {
-        idEmpleado: {
+        empleadoId: {
             type: Sequelize.INTEGER,
             references: {
                 model: 'empleados',

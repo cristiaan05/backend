@@ -51,7 +51,7 @@ function agregarEmpleado(req, res) {
 
 function eliminarEmpleado(req, res) {
     var id = req.params.id;
-    Solicitud.findOne({ where: { idEmpleado: id } }).then(solicitud => {
+    Solicitud.findOne({ where: { empleadoId: id } }).then(solicitud => {
         if (solicitud) {
             res.send('el empleado tiene solicitudes, eliminelas antes de eliminar al empleado');
         } else {
@@ -73,7 +73,7 @@ function crearSolicitud(req, res) {
         if (customer) {
             if (diasSolicitados < customer.diasDisponibles) {
                 Solicitud.create({
-                    idEmpleado: idEmpleado,
+                    empleadoId: idEmpleado,
                     fecha: date,
                     diasSolicitados: diasSolicitados,
                     status: status
@@ -103,19 +103,18 @@ function getEmpleados(req, res) {
 }
 
 function getSolicitudes(req, res) {
-    Solicitud.findAll().then(empleado => {
-        // Send all customers to Client
-        res.send(empleado);
-    });
+    Solicitud.findAll({include: [Empleado] }).then(solicitud=>{
+        res.send(solicitud)
+    })
 }
 
 function eliminarSolicitud(req, res) {
     var id = req.params.id
     Solicitud.findOne({ where: { id: id } }).then(solicitud => {
         if (solicitud) {
-            Empleado.findOne({ where: { id: solicitud.idEmpleado } }).then(empleado => {
+            Empleado.findOne({ where: { id: solicitud.empleadoId } }).then(empleado => {
                 Empleado.update({ diasDisponibles: empleado.diasDisponibles + solicitud.diasSolicitados },
-                    { where: { id: solicitud.idEmpleado } }
+                    { where: { id: solicitud.empleadoId } }
                 ).then(() => {
                     Solicitud.destroy({
                         where: { id: id }
