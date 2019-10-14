@@ -16,6 +16,9 @@ module.exports = (sequelize, Sequelize) => {
         diasSolicitados: {
             type: Sequelize.INTEGER
         },
+        periodo:{
+            type: Sequelize.STRING
+        },
         status: {
             type: Sequelize.STRING
         }

@@ -9,14 +9,14 @@ module.exports = (sequelize, Sequelize) => {
         apellido: {
             type: Sequelize.STRING
         },
+        fechaIngreso:{
+            type: Sequelize.DATE
+        },
         email: {
             type: Sequelize.STRING
         },
         dpi: {
             type: Sequelize.STRING
-        },
-        diasDisponibles: {
-            type: Sequelize.INTEGER
         }
     }, { timestamps: false });
 

@@ -2,27 +2,21 @@
 const db = require('../config/dbConfig');
 const sequelize = db.sequelize
 module.exports = (sequelize, Sequelize) => {
-    const Usuario = sequelize.define('usuario', {
-        usuario: {
+    const Vacaciones = sequelize.define('vacacione', {
+        periodo: {
             type: Sequelize.STRING
         },
-        password: {
-            type: Sequelize.STRING
+        diasDisponibles: {
+            type: Sequelize.INTEGER
         },
-        rol: {
-            type: Sequelize.STRING
-        },
-        empleadoId:{
+        empleadoId: {
             type: Sequelize.INTEGER,
             references: {
                 model: 'empleados',
                 key: 'id'
             }
         }
-    }, { timestamps: false }, {
-        charset: 'utf8',
-        collate: 'utf8_unicode_ci'
-    });
+    }, { timestamps: false });
 
-    return Usuario;
+    return Vacaciones;
 }

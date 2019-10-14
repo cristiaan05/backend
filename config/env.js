@@ -2,7 +2,7 @@ const env = {
   database: 'vacaciones',
   username: 'root',
   password: 'practicante',
-  host: '104.155.158.49',
+  host: '23.236.57.18',
   port:'3306',
   dialect: 'mysql',
   pool: {
