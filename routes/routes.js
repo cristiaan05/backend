@@ -14,7 +14,7 @@ api.post('/login',UserController.login);
 api.post('/agregarEmpleado',md_auth.ensureAuth,EmpleadoController.agregarEmpleado);
 // api.delete('/eliminarEmpleado/:id',UserController.eliminarEmpleado);
 // api.post('/crearSolicitud/:id',UserController.crearSolicitud);
-// api.get('/empleados',UserController.getEmpleados);
+api.get('/empleados',EmpleadoController.getEmpleados);
 // api.get('/solicitudes',UserController.getSolicitudes);
 // api.delete('/eliminarSolicitud/:id',UserController.eliminarSolicitud);
 // api.post('/estado/:id',UserController.estado);
