@@ -11,11 +11,11 @@ var api= express.Router();
 //RUTAS
 api.post('/login',UserController.login);
 // api.post('/registrar',UserController.addUser);
-api.post('/agregarEmpleado',md_auth.ensureAuth,EmpleadoController.agregarEmpleado);
+api.post('/agregarEmpleado',EmpleadoController.agregarEmpleado);
 //api.post('/event',md_auth.ensureAuth,VacacionesController.event);
 // api.delete('/eliminarEmpleado/:id',UserController.eliminarEmpleado);
 // api.post('/crearSolicitud/:id',UserController.crearSolicitud);
- api.get('/empleados',md_auth.ensureAuth,EmpleadoController.getEmpleados);
+ api.get('/empleados',EmpleadoController.getEmpleados);
 // api.get('/solicitudes',UserController.getSolicitudes);
 // api.delete('/eliminarSolicitud/:id',UserController.eliminarSolicitud);
 // api.post('/estado/:id',UserController.estado);

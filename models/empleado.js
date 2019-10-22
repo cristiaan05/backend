@@ -9,6 +9,9 @@ module.exports = (sequelize, Sequelize) => {
         apellido: {
             type: Sequelize.STRING
         },
+        fechaNacimiento:{
+            type: Sequelize.DATE
+        },
         fechaIngreso:{
             type: Sequelize.DATE
         },
