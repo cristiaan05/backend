@@ -8,7 +8,6 @@ function agaregarVacaciones(req, res) {
     var periodo = req.body.periodo;
     var diasDisponibles = 15;
     var empleadoId = req.params.id;
-
     Vacaciones.create({
         periodo: periodo,
         diasDisponibles: diasDisponibles,

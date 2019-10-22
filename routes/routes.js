@@ -11,7 +11,8 @@ var api= express.Router();
 //RUTAS
 api.post('/login',UserController.login);
 // api.post('/registrar',UserController.addUser);
-api.post('/agregarEmpleado',md_auth.ensureAuth,EmpleadoController.agregarEmpleado);
+api.post('/agregarEmpleado',EmpleadoController.agregarEmpleado);
+//api.post('/event',md_auth.ensureAuth,VacacionesController.event);
 // api.delete('/eliminarEmpleado/:id',UserController.eliminarEmpleado);
 // api.post('/crearSolicitud/:id',UserController.crearSolicitud);
 api.get('/empleados',EmpleadoController.getEmpleados);

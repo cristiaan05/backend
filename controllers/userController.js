@@ -4,8 +4,7 @@ var jwt = require('../services/jwt');
 var bcrypt = require('bcrypt');
 
 const Usuario = db.usuario;
-const Empleado = db.empleado;
-const Solicitud = db.solicitud;
+
 
 function login(req, res) {
     var usuario = req.body.usuario;

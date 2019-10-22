@@ -7,14 +7,17 @@ const Empleado = db.empleado;
 const Solicitud = db.solicitud;
 
 function agregarEmpleado(req, res) {
+    console.log('hola')
     var params = req.body
     var nombre = params.nombre;
     var apellido = params.apellido;
-    var fechaIngreso = params.fecha
+    var fechaIngreso = params.fechaIngreso
+    var fechaNacimiento = params.fechaNacimiento
     var dpi = params.dpi;
     var email = params.email;
     // var diasDisponibles = req.body.dias;
-    if (nombre && apellido && fechaIngreso && dpi && email) {
+    if (nombre && apellido && fechaIngreso && fechaNacimiento && dpi && email) {
+        console.log('hola2')
         Empleado.findAll({
             where: {
                 [Op.or]: [
@@ -26,6 +29,7 @@ function agregarEmpleado(req, res) {
                 ]
             }
         }).then(empleados => {
+            console.log('hola3')
             if (empleados && empleados.length >= 1) {
                 return res.status(500).send({ message: 'El empleado ya existe en el sistema' })
             } else {
@@ -33,6 +37,7 @@ function agregarEmpleado(req, res) {
                     nombre: nombre,
                     apellido: apellido,
                     fechaIngreso: fechaIngreso,
+                    fechaNacimiento: fechaNacimiento,
                     dpi: dpi,
                     email: email
                 }).then(empleado => {
@@ -45,37 +50,44 @@ function agregarEmpleado(req, res) {
                             ]
                         }
                     }).then(usuarios => {
+                      //  console.log(usuarios)
+                        console.log('hola4')
                         if (usuarios && usuarios.length >= 1) {
+                            console.log('hola 5')
                             var i = nombre.toLowerCase().split("");
                             bcrypt.hash(dpi, 10, (err, hash) => {
                                 Usuario.create({
                                     usuario: i[0] + i[1] + apellido.toLowerCase(),
                                     password: hash,
-                                    rol: req.body.rol,
+                                    rol: "usuario",
                                     empleadoId: empleado.id
                                 }).then(user => {
+                                   //    return res.status(200).send(user)
                                 });
                             });
                         } else {
+                            console.log('hola6')
                             var i = nombre.toLowerCase().split("");
                             bcrypt.hash(dpi, 10, (err, hash) => {
                                 Usuario.create({
                                     usuario: i[0] + apellido.toLowerCase(),
                                     password: hash,
-                                    rol: req.body.rol,
+                                    rol: "usuario",
                                     empleadoId: empleado.id
                                 }).then(user => {
-                                });
+                                    console.log(user)
+                                   // return res.send(user)
+                                })
                             });
-                            // Send created customer to client
-                            res.status(200).send(empleado);
                         }
+                        // Send created customer to client
+                        return res.status(200).send(empleado);
                     });
                 })
             }
         })
     } else {
-        res.status(204).send('Rellene todos los campos');
+        return res.status(500).send('Rellene todos los campos');
     }
 }
 
