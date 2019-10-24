@@ -50,11 +50,16 @@ function agregarEmpleado(req, res) {
                             ]
                         }
                     }).then(usuarios => {
-                      //  console.log(usuarios)
+                        //  console.log(usuarios)
                         console.log('hola4')
                         if (usuarios && usuarios.length >= 1) {
                             console.log('hola 5')
                             var i = nombre.toLowerCase().split("");
+                            db.sequelize.query('create event e_AgregarVacaciones on schedule every 1 minute starts now() do call agregarVacaciones(?,?,?)', ['2019',15,empleado.id], function(err, result) {
+                                if (err) throw err;
+                                callback(err, result);
+                                console.log('event')
+                            });
                             bcrypt.hash(dpi, 10, (err, hash) => {
                                 Usuario.create({
                                     usuario: i[0] + i[1] + apellido.toLowerCase(),
@@ -62,7 +67,7 @@ function agregarEmpleado(req, res) {
                                     rol: "usuario",
                                     empleadoId: empleado.id
                                 }).then(user => {
-                                   //    return res.status(200).send(user)
+                                    //     return res.status(200).send(user)
                                 });
                             });
                         } else {
@@ -76,7 +81,7 @@ function agregarEmpleado(req, res) {
                                     empleadoId: empleado.id
                                 }).then(user => {
                                     console.log(user)
-                                   // return res.send(user)
+                                    // return res.send(user)
                                 })
                             });
                         }
@@ -97,13 +102,25 @@ function eliminarEmpleado(req, res) {
         if (solicitud) {
             res.send('el empleado tiene solicitudes, eliminelas antes de eliminar al empleado');
         } else {
-            Empleado.destroy({
-                where: { id: id }
-            }).then(() => {
-                Usuario.destroy({ where: { empleadoId: id } }).then(() => {
-                    res.status(200).send('deleted successfully a employee with id = ' + id);
-                })
-            });
+            Usuario.findOne({ where: { empleadoId: id } }).then(solicitud => {
+                if (solicitud) {
+                    Usuario.destroy({
+                        where: { empleadoId: id }
+                    }).then(() => {
+                        Empleado.destroy({ where: { id: id } }).then(() => {
+                            res.status(200).send('deleted successfully a employee with id = ' + id);
+                        })
+                    });
+                } else {
+                    Empleado.destroy({
+                        where: { id: id }
+                    }).then(() => {
+                        Usuario.destroy({ where: { empleadoId: id } }).then(() => {
+                            res.status(200).send('deleted successfully a employee with id = ' + id);
+                        })
+                    });
+                }
+            })
         }
     })
 }
@@ -115,8 +132,20 @@ function getEmpleados(req, res) {
     });
 }
 
+function agregarVacaciones(){
+    var dias= req.body.dias
+    var periodo= req.body.periodo
+    var empleadoId=req.body.empleadoId
+    db.sequelize.query('create event e_AgregarVacacion on schedule every 1 minute starts now() do call agregarVacaciones(?,?,?)',[periodo,dias,empleadoId] ,function(err, result) {
+        if (err) throw err;
+        callback(err, result);
+        console.log('event')
+    });
+}
+
 module.exports = {
     agregarEmpleado,
+    agregarVacaciones,
     eliminarEmpleado,
     getEmpleados
 }

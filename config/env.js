@@ -1,8 +1,8 @@
-const env = {
+  const env = {
   database: 'vacaciones',
   username: 'root',
   password: 'practicante',
-  host: '35.223.68.44',
+  host: '35.223.21.228',
   port:'3306',
   dialect: 'mysql',
   pool: {
