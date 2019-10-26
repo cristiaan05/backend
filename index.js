@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize');
 const db = require('./config/dbConfig');
 const app = require('./app');
-var port = process.env.PORT || 3000
+var port = process.env.PORT || 8081
 
 db.sequelize.sync({force: false}).then(() => {
   console.log('Drop and Resync with { force: false }');

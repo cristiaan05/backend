@@ -2,7 +2,7 @@
   database: 'vacaciones',
   username: 'root',
   password: 'practicante',
-  host: '35.223.21.228',
+  host: '35.184.223.141',
   port:'3306',
   dialect: 'mysql',
   pool: {

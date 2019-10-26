@@ -15,9 +15,7 @@ function agregarEmpleado(req, res) {
     var fechaNacimiento = params.fechaNacimiento
     var dpi = params.dpi;
     var email = params.email;
-    // var diasDisponibles = req.body.dias;
     if (nombre && apellido && fechaIngreso && fechaNacimiento && dpi && email) {
-        console.log('hola2')
         Empleado.findAll({
             where: {
                 [Op.or]: [
@@ -29,7 +27,6 @@ function agregarEmpleado(req, res) {
                 ]
             }
         }).then(empleados => {
-            console.log('hola3')
             if (empleados && empleados.length >= 1) {
                 return res.status(500).send({ message: 'El empleado ya existe en el sistema' })
             } else {
@@ -50,16 +47,8 @@ function agregarEmpleado(req, res) {
                             ]
                         }
                     }).then(usuarios => {
-                        //  console.log(usuarios)
-                        console.log('hola4')
                         if (usuarios && usuarios.length >= 1) {
-                            console.log('hola 5')
                             var i = nombre.toLowerCase().split("");
-                            db.sequelize.query('create event e_AgregarVacaciones on schedule every 1 minute starts now() do call agregarVacaciones(?,?,?)', ['2019',15,empleado.id], function(err, result) {
-                                if (err) throw err;
-                                callback(err, result);
-                                console.log('event')
-                            });
                             bcrypt.hash(dpi, 10, (err, hash) => {
                                 Usuario.create({
                                     usuario: i[0] + i[1] + apellido.toLowerCase(),
@@ -67,11 +56,9 @@ function agregarEmpleado(req, res) {
                                     rol: "usuario",
                                     empleadoId: empleado.id
                                 }).then(user => {
-                                    //     return res.status(200).send(user)
                                 });
                             });
                         } else {
-                            console.log('hola6')
                             var i = nombre.toLowerCase().split("");
                             bcrypt.hash(dpi, 10, (err, hash) => {
                                 Usuario.create({
@@ -128,18 +115,17 @@ function eliminarEmpleado(req, res) {
 function getEmpleados(req, res) {
     Empleado.findAll().then(empleado => {
         // Send all customers to Client
-        res.send(empleado);
+        return res.send(empleado);
     });
 }
 
-function agregarVacaciones(){
-    var dias= req.body.dias
-    var periodo= req.body.periodo
+function agregarVacaciones(req,res){
+    var dias=req.body.dias
+    var periodo=req.body.periodo
     var empleadoId=req.body.empleadoId
-    db.sequelize.query('create event e_AgregarVacacion on schedule every 1 minute starts now() do call agregarVacaciones(?,?,?)',[periodo,dias,empleadoId] ,function(err, result) {
+    db.sequelize.query("insert into vacaciones(periodo,diasDisponibles,empleadoId) values('2019',15,1)",function(err, result) {
         if (err) throw err;
-        callback(err, result);
-        console.log('event')
+       return res.status(200).send(result)
     });
 }
 
