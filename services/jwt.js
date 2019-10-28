@@ -6,6 +6,8 @@ exports.createToken = function(usuario) {
     var payload = {
         sub: usuario._id,
         usuario: usuario.usuario,
+        rol:usuario.rol,
+        empleadoId:usuario.empleadoId,
         iat: moment().unix(),
         exp: moment().hour(1).unix
     }

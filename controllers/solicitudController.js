@@ -58,6 +58,13 @@ function getSolicitudes(req, res) {
     })
 }
 
+function getSolicitudesEmpleado(req,res){
+    var id= req.usuario.empleadoId
+    Solicitud.findAll({ where: { empleadoId: id }, include: [Empleado] }).then(solicitudes => {
+        res.status(200).send(solicitudes)
+    })
+}
+
 function estado(req, res) {
     var id = req.params.id;
     var status = req.body.status;
@@ -85,4 +92,12 @@ function estado(req, res) {
             //res.status(200).send("updated successfully a customer with id = " + idEmpleado);
         });
     }
+}
+
+module.exports={
+    crearSolicitud,
+    eliminarSolicitud,
+    estado,
+    getSolicitudes,
+    getSolicitudesEmpleado
 }

@@ -15,14 +15,10 @@ function login(req, res) {
         if (usuario) {
            bcrypt.compare(password, usuario.password, (err,check) => {
                 if (check) {
-                    if (req.body.gettoken) {
                         return res.status(200).send({
+                            user: usuario.dataValues.rol,
                             token: jwt.createToken(usuario)
                         })
-                    } else {
-                        usuario.password = undefined;
-                        return res.status(202).send({ usuario })
-                    }
                } else {
                     return res.status(404).send({ message: 'Contraseña incorrecta' })
                }

@@ -17,5 +17,17 @@ function agaregarVacaciones(req, res) {
     });
 }
 
+function getVacaciones(req, res) {
+    var id=req.usuario.empleadoId
+    console.log(id)
+    Vacaciones.findAll({ where: { empleadoId: id }, include: [Empleado] }).then(vacaciones => {
+        res.send(vacaciones)
+    })
+}
+
+module.exports={
+    getVacaciones
+}
+
 
 

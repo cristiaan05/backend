@@ -1,5 +1,5 @@
 'use strict'
-const db = require('../config/dbConfig');
+var db = require('../config/dbConfig');
 var bcrypt = require('bcrypt');
 const Op = db.Sequelize.Op;
 const Usuario = db.usuario;
@@ -47,7 +47,9 @@ function agregarEmpleado(req, res) {
                             ]
                         }
                     }).then(usuarios => {
+                        console.log(usuarios)
                         if (usuarios && usuarios.length >= 1) {
+                            console.log('here')
                             var i = nombre.toLowerCase().split("");
                             bcrypt.hash(dpi, 10, (err, hash) => {
                                 Usuario.create({
@@ -56,25 +58,27 @@ function agregarEmpleado(req, res) {
                                     rol: "usuario",
                                     empleadoId: empleado.id
                                 }).then(user => {
-                                });
+                                    console.log(user)
+                                }).catch(err => console.log(err));
                             });
                         } else {
+                            console.log('here2')
                             var i = nombre.toLowerCase().split("");
                             bcrypt.hash(dpi, 10, (err, hash) => {
                                 Usuario.create({
                                     usuario: i[0] + apellido.toLowerCase(),
                                     password: hash,
-                                    rol: "usuario",
+                                    rol: "admin",
                                     empleadoId: empleado.id
                                 }).then(user => {
                                     console.log(user)
                                     // return res.send(user)
-                                })
+                                }).catch(err => console.log(err));
                             });
                         }
                         // Send created customer to client
-                        return res.status(200).send(empleado);
-                    });
+                    }).catch(err => console.log(err));
+                    return res.status(200).send(empleado);
                 })
             }
         })
@@ -119,14 +123,16 @@ function getEmpleados(req, res) {
     });
 }
 
-function agregarVacaciones(req,res){
-    var dias=req.body.dias
-    var periodo=req.body.periodo
-    var empleadoId=req.body.empleadoId
-    db.sequelize.query("insert into vacaciones(periodo,diasDisponibles,empleadoId) values('2019',15,1)",function(err, result) {
-        if (err) throw err;
-       return res.status(200).send(result)
-    });
+function agregarVacaciones(req, res) {
+    var dias = req.body.dias
+    var periodo = req.body.periodo
+    var empleadoId = req.body.empleadoId
+    var name= req.body.name
+    db.sequelize.query('CREATE EVENT '+name+' ON SCHEDULE  every 1 YEAR starts  CURRENT_TIMESTAMP  DO call agregarVacaciones(?,?,?)',
+        { replacements: [name,periodo,dias,empleadoId], type: db.sequelize.QueryTypes.INSERT }
+    ).then(function (projects) {
+        res.send(projects)
+    })
 }
 
 module.exports = {
