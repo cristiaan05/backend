@@ -15,6 +15,7 @@ function agregarEmpleado(req, res) {
     var fechaNacimiento = params.fechaNacimiento
     var dpi = params.dpi;
     var email = params.email;
+    var rol = params.rol;
     if (nombre && apellido && fechaIngreso && fechaNacimiento && dpi && email) {
         Empleado.findAll({
             where: {
@@ -55,10 +56,11 @@ function agregarEmpleado(req, res) {
                                 Usuario.create({
                                     usuario: i[0] + i[1] + apellido.toLowerCase(),
                                     password: hash,
-                                    rol: "usuario",
+                                    rol: rol,
                                     empleadoId: empleado.id
                                 }).then(user => {
-                                    console.log(user)
+                                    console.log(user.usuario)
+                                    agregarVacaciones(empleado.id)
                                 }).catch(err => console.log(err));
                             });
                         } else {
@@ -68,10 +70,11 @@ function agregarEmpleado(req, res) {
                                 Usuario.create({
                                     usuario: i[0] + apellido.toLowerCase(),
                                     password: hash,
-                                    rol: "admin",
+                                    rol: rol,
                                     empleadoId: empleado.id
                                 }).then(user => {
                                     console.log(user)
+                                    agregarVacaciones(empleado.id)
                                     // return res.send(user)
                                 }).catch(err => console.log(err));
                             });
@@ -123,15 +126,22 @@ function getEmpleados(req, res) {
     });
 }
 
-function agregarVacaciones(req, res) {
-    var dias = req.body.dias
-    var periodo = req.body.periodo
-    var empleadoId = req.body.empleadoId
-    var name= req.body.name
-    db.sequelize.query('CREATE EVENT '+name+' ON SCHEDULE  every 1 YEAR starts  CURRENT_TIMESTAMP  DO call agregarVacaciones(?,?,?)',
-        { replacements: [name,periodo,dias,empleadoId], type: db.sequelize.QueryTypes.INSERT }
+function agregarVacaciones(empleadoId, name) {
+    var y = new Date();
+    var year = y.getFullYear();
+    var periodo = (year + "/" + (year + 1))
+    var dias = 0
+    var empleadoId = empleadoId
+    var name = "vacaciones" + empleadoId;
+    var editarName= "editarVacaciones"+empleadoId
+    db.sequelize.query('CREATE EVENT ' + name + ' ON SCHEDULE  every 1 YEAR starts  CURRENT_TIMESTAMP  DO call agregarVacaciones(?,?,?)',
+        { replacements: [periodo, dias, empleadoId], type: db.sequelize.QueryTypes.INSERT }
     ).then(function (projects) {
-        res.send(projects)
+        db.sequelize.query('CREATE EVENT ' + editarName + ' ON SCHEDULE  every 24 DAY starts  CURRENT_TIMESTAMP  DO call editarDias(?)',
+            { replacements: [empleadoId], type: db.sequelize.QueryTypes.INSERT }
+        ).then(function (projects) {
+            console.log(projects)
+        })
     })
 }
 

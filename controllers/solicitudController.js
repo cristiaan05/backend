@@ -3,6 +3,8 @@ const db = require('../config/dbConfig');
 const Usuario = db.usuario;
 const Empleado = db.empleado;
 const Solicitud = db.solicitud;
+const Vacaciones = db.vacaciones;
+
 
 function crearSolicitud(req, res) {
     var idEmpleado = req.usuario.sub;
@@ -35,9 +37,9 @@ function eliminarSolicitud(req, res) {
     var id = req.params.id
     Solicitud.findOne({ where: { id: id } }).then(solicitud => {
         if (solicitud) {
-            Empleado.findOne({ where: { id: solicitud.empleadoId } }).then(empleado => {
-                Empleado.update({ diasDisponibles: empleado.diasDisponibles + solicitud.diasSolicitados },
-                    { where: { id: solicitud.empleadoId } }
+            Vacaciones.findOne({ where: { empleadoId: solicitud.empleadoId } }).then(vacaciones => {
+                Vacaciones.update({ diasDisponibles: vacaciones.diasDisponibles + solicitud.diasSolicitados },
+                    { where: { empleadoId: solicitud.empleadoId } }
                 ).then(() => {
                     Solicitud.destroy({
                         where: { id: id }
@@ -73,9 +75,9 @@ function estado(req, res) {
             { where: { id: id } }
         ).then(solicitud => {
             Solicitud.findOne({ where: { id: id } }).then(solicitud => {
-                Empleado.findOne({ where: { id: solicitud.empleadoId } }).then(empleado => {
-                    Empleado.update({ diasDisponibles: empleado.diasDisponibles - solicitud.diasSolicitados },
-                        { where: { id: empleado.id } }
+                Vacaciones.findOne({ where: { empleadoId: solicitud.empleadoId } }).then(vacaciones => {
+                    Vacaciones.update({ diasDisponibles: vacaciones.diasDisponibles - solicitud.diasSolicitados },
+                        { where: { empleadoId: solicitud.empleadoId } }
                     ).then(() => {
                         //res.status(200).send("updated successfully a customer with id = " + idEmpleado);
                     });
