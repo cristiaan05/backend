@@ -145,6 +145,10 @@ function agregarVacaciones(empleadoId, name) {
     })
 }
 
+function editarEmpleado(re,res) {
+    
+}
+
 module.exports = {
     agregarEmpleado,
     agregarVacaciones,
