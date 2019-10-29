@@ -126,6 +126,13 @@ function getEmpleados(req, res) {
     });
 }
 
+function getEmpleado(req, res) {
+    var empleadoId=req.params.id
+    Empleado.findOne({where:{id:empleadoId}, include: [Usuario]}).then(empleado => {
+        return res.send(empleado);
+    });
+}
+
 function agregarVacaciones(empleadoId, name) {
     var y = new Date();
     var year = y.getFullYear();
@@ -133,7 +140,7 @@ function agregarVacaciones(empleadoId, name) {
     var dias = 0
     var empleadoId = empleadoId
     var name = "vacaciones" + empleadoId;
-    var editarName= "editarVacaciones"+empleadoId
+    var editarName = "editarVacaciones" + empleadoId
     db.sequelize.query('CREATE EVENT ' + name + ' ON SCHEDULE  every 1 YEAR starts  CURRENT_TIMESTAMP  DO call agregarVacaciones(?,?,?)',
         { replacements: [periodo, dias, empleadoId], type: db.sequelize.QueryTypes.INSERT }
     ).then(function (projects) {
@@ -145,13 +152,32 @@ function agregarVacaciones(empleadoId, name) {
     })
 }
 
-function editarEmpleado(re,res) {
-    
+function editarEmpleado(req, res) {
+    var empleadoId = req.params.id
+    var nombre = req.body.nombre
+    var apellido = req.body.apellido
+    var fechaNacimiento = req.body.fechaNacimiento
+    var rol=req.body.rol
+    Empleado.findOne({ where: { id: empleadoId } }).then(empleado => {
+        Empleado.update({ nombre: nombre, apellido: apellido, fechaNacimiento: fechaNacimiento },
+            { where: { id: empleadoId } }
+        ).then(() => {
+            var i = nombre.toLowerCase().split("");
+            Usuario.update( { usuario: i[0] + apellido.toLowerCase(), rol: rol}, 
+                { where: {empleadoId: empleadoId} }
+                ).then(() => {
+                console.log("updated successfully username");
+                });
+            res.status(200).send("updated successfully employeer");
+        });
+    });
 }
 
 module.exports = {
     agregarEmpleado,
     agregarVacaciones,
+    editarEmpleado,
     eliminarEmpleado,
-    getEmpleados
+    getEmpleados,
+    getEmpleado
 }

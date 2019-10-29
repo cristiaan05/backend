@@ -25,6 +25,14 @@ function getVacaciones(req, res) {
     })
 }
 
+function getPeriodo(req,res) {
+    var id=req.params.id
+    console.log(id)
+    Vacaciones.findAll({ where: { empleadoId: id }}).then(vacaciones => {
+        res.send(vacaciones)
+    })
+}
+
 module.exports={
     getVacaciones
 }

@@ -29,6 +29,7 @@ db.solicitud = require('../models/solicitud')(sequelize, Sequelize);
 db.vacaciones = require('../models/vacaciones')(sequelize, Sequelize);
 
 db.empleado.hasMany(db.solicitud)
+db.empleado.hasOne(db.usuario)
 db.solicitud.belongsTo(db.empleado)
 db.empleado.hasMany(db.vacaciones)
 db.vacaciones.belongsTo(db.empleado)
